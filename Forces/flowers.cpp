@@ -1,26 +1,35 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
 using namespace std;
 
-int solve(int n){
-    if(n == 0) return 1;
-    int sum = 0;
-    if(n >= k) sum += solve(n-k);
-    sum += solve(n-1);
-    return sum;
-}
+const int M = 1e9+7;
+
 int main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int t, k;
+    int t, k; 
     cin >> t >> k;
-    while(t--){
-        int a, b;
-        cin >> a >> b;
-        int ways = 0;
-        for(int i = a; i < b; i++){
-            ways += solve(i);
-        }
-        cout<< ways<< nline;
+
+    vector<pair<int,int>> queries(t);
+    int maxB = 0;
+    for(int i = 0;i < t; i++){
+        cin >> queries[i].first >> queries[i].second;
+        maxB = max(maxB, queries[i].second);
+    }
+    vector<long long> dp(maxB+1);
+    dp[0] = 1;
+    for(int i = 1;i <= maxB; i++){
+        long long red = dp[i-1];
+        long long white = (k <= i? dp[i-k] : 0);
+        dp[i] = (red + white) % M;
+    }
+
+    vector<long long> prefix(maxB+1);
+    for(int i = 1; i <= maxB; i++){
+        prefix[i] = (prefix[i-1] + dp[i]) % M;
+    }
+    for(auto [a,b]:queries){
+        cout<< (prefix[b] - prefix[a-1] + M) % M << '\n';
     }
 }

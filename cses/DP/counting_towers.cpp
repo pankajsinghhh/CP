@@ -2,8 +2,6 @@
 #include<vector>
 using namespace std;
 
-int M = 1e9+7;
-
 bool valid(int a, int m){
     return a >= 1 && a <= m;
 }
